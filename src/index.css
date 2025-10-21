@@ -1,0 +1,60 @@
+:root{
+	--brand:#d90429;
+}
+body { font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: linear-gradient(180deg,#fff 0%, #fff8f0 100%); }
+
+main { min-height: 70vh }
+
+.navbar-brand img { border-radius: 6px }
+
+.navbar-brand{ font-weight:700; font-size:1.25rem }
+.nav-logo{ object-fit:cover }
+
+/* hero */
+.hero{ background: linear-gradient(90deg, rgba(217,4,41,0.06), rgba(255,255,255,0)); padding: 48px; border-radius: 12px }
+.hero h1{ font-size:2rem; font-weight:700 }
+.hero p{ color:#444 }
+
+/* separators for sections */
+.section-separator{ border-top: 4px solid var(--brand); padding-top: 1.25rem; margin-top: 1.5rem }
+
+/* navbar hover and responsive logo */
+.navbar-brand{ letter-spacing:0.2px }
+.navbar .nav-link:hover{ color: #fffde7 }
+.nav-logo{ width:48px; height:48px }
+@media(max-width:576px){ .nav-logo{ width:36px; height:36px } .hero{ padding:20px } }
+
+.btn{ transition: transform .12s ease }
+.btn:active{ transform: translateY(1px) }
+
+/* cart panel tweaks */
+.card.position-absolute{ box-shadow:0 12px 30px rgba(0,0,0,0.12) }
+
+/* badge bump animation */
+.cart-badge{ transition: transform .26s ease }
+.cart-bump{ transform: scale(1.18); }
+
+.card { border: none; }
+.card.footer { border-top: none }
+.hover-scale{ transition: transform .18s ease, box-shadow .18s ease }
+.hover-scale:hover{ transform: translateY(-6px); box-shadow: 0 10px 25px rgba(0,0,0,0.08) }
+
+.btn-danger{ background: var(--brand); border: none }
+
+#contact { background: linear-gradient(90deg,#fff 0%, #fffdf7 100%) }
+
+.container { max-width: 1100px }
+
+/* responsive tweaks */
+@media (max-width: 767px){
+	.card .card-img-top{ height: 160px; object-fit: cover }
+	.card-footer .btn{ font-size: 0.85rem }
+	.card .card-body { padding: 0.85rem }
+}
+
+.card .card-img-top{ object-fit: cover }
+
+/* ensure cart panel fits on small screens */
+@media (max-width: 480px){
+	.card.position-absolute { right: 8px !important; left: 8px !important; width: auto !important }
+}
