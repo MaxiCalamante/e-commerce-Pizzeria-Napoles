@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import ItemListContainer from './components/ItemListContainer'
+import ItemDetailContainer from './components/ItemDetailContainer'
 import Contact from './components/Contact'
+import NotFound from './components/NotFound'
 
 export default function App(){
   const [cartItems, setCartItems] = useState(() => {
@@ -56,8 +59,12 @@ export default function App(){
     <div>
       <NavBar cartItems={cartItems} increase={increase} decrease={decrease} removeItem={removeItem} clearCart={clearCart} checkout={checkout} />
       <main className="container mt-4">
-        <ItemListContainer greeting="Bienvenidos a Pizzería Nápoles! Disfruta nuestros sabores tradicionales." onAdd={addToCart} />
-        <Contact />
+        <Routes>
+          <Route path="/" element={<><ItemListContainer greeting="Bienvenidos a Pizzería Nápoles! Disfruta nuestros sabores tradicionales." onAdd={addToCart} /><Contact /></>} />
+          <Route path="/category/:categoryId" element={<ItemListContainer greeting="Bienvenidos a Pizzería Nápoles! Disfruta nuestros sabores tradicionales." onAdd={addToCart} />} />
+          <Route path="/item/:id" element={<ItemDetailContainer onAdd={addToCart} />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </main>
     </div>
   )
