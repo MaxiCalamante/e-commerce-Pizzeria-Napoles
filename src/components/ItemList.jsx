@@ -1,48 +1,57 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Loader from './Loader'
 
-export default function ItemList({ greeting, items = [], loading, onAdd }){
+export default function ItemList({ greeting, items, loading }) {
+  if (loading) {
+    return <Loader message="Cargando pizzas deliciosas..." />
+  }
+
   return (
     <div>
-      <div className="hero mb-4">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-8">
-              <h1 className="mb-2">{greeting}</h1>
-              <p className="lead">Descubri nuestras pizzas artesanales, masa casera y ingredientes seleccionados. ¡Pedí online o pasá por el local!</p>
-            </div>
-            <div className="col-md-4 text-center">
-              <img src="/src/assets/pizza-pepperoni.svg" alt="pizza" style={{maxWidth:180}} className="img-fluid" />
-            </div>
-          </div>
-        </div>
+      <div className="text-center my-5">
+        <h1 className="display-5 fw-bold text-danger">{greeting}</h1>
       </div>
 
-      <section id="menu" className="row g-4 section-separator">
-        {loading && <p>Cargando productos...</p>}
-        {!loading && items.map(p => (
-          <article key={p.id} className="col-12 col-md-4">
-            <div className="card h-100 shadow-sm hover-scale">
-              <div style={{height:200, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden'}}>
-                <img src={p.img} style={{maxWidth:'100%', maxHeight:'100%'}} className="card-img-top" alt={p.name} />
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">{p.name}</h5>
-                <p className="card-text">{p.desc}</p>
-              </div>
-              <div className="card-footer d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>${p.price}</strong>
+      {items.length === 0 ? (
+        <div className="alert alert-info text-center">
+          <h4>No hay productos disponibles en esta categoría</h4>
+          <p>Prueba con otra categoría o vuelve más tarde</p>
+        </div>
+      ) : (
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          {items.map(pizza => (
+            <div key={pizza.id} className="col">
+              <div className="card h-100 shadow-sm hover-card">
+                <div className="card-img-top d-flex align-items-center justify-content-center bg-light" style={{ height: '200px' }}>
+                  <img src={pizza.img} alt={pizza.name} className="img-fluid" style={{ maxHeight: '150px', objectFit: 'contain' }} />
                 </div>
-                <div className="d-flex gap-2">
-                  <Link to={`/item/${p.id}`} className="btn btn-sm btn-outline-primary">Ver</Link>
-                  <button aria-label={`Agregar 1 ${p.name} al carrito`} className="btn btn-sm btn-danger" onClick={() => onAdd && onAdd(p)}>Agregar</button>
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{pizza.name}</h5>
+                  <p className="card-text text-muted small flex-grow-1">{pizza.desc}</p>
+
+                  <div className="mb-2">
+                    <span className="badge bg-secondary me-2">{pizza.category}</span>
+                    {pizza.stock === 0 ? (
+                      <span className="badge bg-danger">Sin stock</span>
+                    ) : pizza.stock <= 5 ? (
+                      <span className="badge bg-warning text-dark">Pocas unidades</span>
+                    ) : null}
+                  </div>
+
+                  <p className="fs-5 fw-bold text-danger mb-3">
+                    ${pizza.price.toLocaleString('es-AR')}
+                  </p>
+
+                  <Link to={`/item/${pizza.id}`} className="btn btn-danger w-100">
+                    Ver Detalles
+                  </Link>
                 </div>
               </div>
             </div>
-          </article>
-        ))}
-      </section>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

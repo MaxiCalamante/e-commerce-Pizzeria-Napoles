@@ -4,7 +4,7 @@ import CartWidget from './CartWidget'
 import logo from '../assets/logo.svg'
 import { listCategories } from '../data/products'
 
-export default function NavBar({ cartItems = [], increase, decrease, removeItem, clearCart, checkout }){
+export default function NavBar() {
   const categories = listCategories()
 
   return (
@@ -13,9 +13,6 @@ export default function NavBar({ cartItems = [], increase, decrease, removeItem,
         <div className="d-flex align-items-center ms-2">
           <img src={logo} alt="Pizza" width="48" height="48" className="rounded-circle me-2 nav-logo" />
           <Link className="navbar-brand mb-0 text-white" to="/">Pizzería Nápoles</Link>
-          {cartItems.length > 0 && (
-            <small className="text-white ms-3">Total: ${cartItems.reduce((s,p)=>s+p.price*p.quantity,0).toLocaleString('es-AR')}</small>
-          )}
         </div>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -37,7 +34,7 @@ export default function NavBar({ cartItems = [], increase, decrease, removeItem,
               <a className="nav-link" href="#contact">Contacto</a>
             </li>
           </ul>
-          <CartWidget cartItems={cartItems} increase={increase} decrease={decrease} removeItem={removeItem} clearCart={clearCart} checkout={checkout} />
+          <CartWidget />
         </div>
       </div>
     </nav>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { fetchPizzaById } from '../data/products'
+import { getProductById } from '../services/firestore'
 import ItemDetail from './ItemDetail'
+import Loader from './Loader'
 
-export default function ItemDetailContainer({ onAdd }){
+export default function ItemDetailContainer() {
   const { id } = useParams()
   const [item, setItem] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -12,15 +13,19 @@ export default function ItemDetailContainer({ onAdd }){
   useEffect(() => {
     setLoading(true)
     setError(null)
-    fetchPizzaById(id)
+    getProductById(id)
       .then(res => setItem(res))
       .catch(err => setError(err.message))
       .finally(() => setLoading(false))
   }, [id])
 
-  if(loading) return <p>Cargando producto...</p>
-  if(error) return <p>Error: {error}</p>
-  if(!item) return <p>Producto no encontrado.</p>
+  if (loading) return <Loader message="Cargando producto..." />
+  if (error) return <div className="alert alert-danger">Error: {error}</div>
+  if (!item) return <div className="alert alert-warning">Producto no encontrado.</div>
 
-  return <ItemDetail item={item} onAdd={onAdd} />
+  return (
+    <div className="container py-4">
+      <ItemDetail item={item} />
+    </div>
+  )
 }
