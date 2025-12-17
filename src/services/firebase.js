@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID
+    apiKey: "AIzaSyCoRwx66KZcFgyeAc0sgGEEwrUuC1_p75U",
+    authDomain: "pizzeria-napoles-4feaa.firebaseapp.com",
+    projectId: "pizzeria-napoles-4feaa",
+    storageBucket: "pizzeria-napoles-4feaa.firebasestorage.app",
+    messagingSenderId: "754721646964",
+    appId: "1:754721646964:web:6e45843468a13385572421"
 }
 
 // Inicializar Firebase
