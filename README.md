@@ -1,134 +1,268 @@
-# Pizzería Nápoles - E-commerce
+# Pizzeria Napoles - Entrega final Backend
 
-Trabajo final del curso de React - E-commerce de pizzería con carrito de compras y conexión a Firebase.
+Repositorio del proyecto: https://github.com/MaxiCalamante/e-commerce-Pizzeria-Napoles
 
-## Descripción del Proyecto
+Imagen DockerHub: https://hub.docker.com/r/maxicalamante/e-commerce-pizzeria-napoles
 
-Este proyecto es una aplicación web de e-commerce desarrollada con React que permite a los usuarios navegar por un catálogo de pizzas, agregarlas al carrito de compras y finalizar la compra. Los productos y las órdenes se almacenan en Firebase Firestore.
+Tag usado para la entrega:
 
-## Tecnologías Utilizadas
-
-- **React** 18.2.0
-- **React Router DOM** 6.14.1 - Para la navegación
-- **Vite** 5.1.0 - Herramienta de desarrollo
-- **Firebase** - Base de datos (Firestore)
-- **Bootstrap** 5 - Estilos (CDN)
-- **Context API** - Gestión del estado del carrito
-
-## Funcionalidades Principales
-
-- Navegación entre vistas (catálogo, detalle, carrito, checkout)
-- Filtrado de productos por categoría
-- Carrito de compras con persistencia en localStorage
-- Validación de stock disponible
-- Formulario de checkout con validaciones
-- Guardado de órdenes en Firebase Firestore
-- Confirmación de compra con ID de orden
-
-## Requisitos Previos
-
-- Node.js versión 14 o superior
-- npm (incluido con Node.js)
-- Cuenta de Firebase con proyecto configurado
-
-## Instalación
-
-1. Clonar el repositorio:
 ```bash
-git clone [URL_DEL_REPOSITORIO]
-cd e-commerce-Pizzeria-Napoles
+maxicalamante/e-commerce-pizzeria-napoles:1.0.0
 ```
 
-2. Instalar las dependencias:
-```bash
-npm install --legacy-peer-deps
+## Descripcion
+
+Este proyecto contiene el e-commerce de Pizzeria Napoles y el backend usado para la entrega final. Para esta entrega se agrego el router `adoption.router.js`, tests funcionales para todos sus endpoints, Dockerfile optimizado y documentacion para reproducir la ejecucion.
+
+## Estructura del proyecto
+
+```txt
+e-commerce-Pizzeria-Napoles/
+|-- Dockerfile
+|-- .dockerignore
+|-- README.md
+|-- backend/
+|   |-- config/
+|   |   `-- db.js
+|   |-- controllers/
+|   |   |-- auth.controller.js
+|   |   `-- session.controller.js
+|   |-- middlewares/
+|   |   `-- auth.js
+|   |-- models/
+|   |   |-- Cart.js
+|   |   `-- User.js
+|   |-- routes/
+|   |   |-- adoption.router.js
+|   |   |-- auth.routes.js
+|   |   `-- session.routes.js
+|   |-- services/
+|   |   `-- adoption.service.js
+|   |-- strategies/
+|   |   `-- passport.js
+|   |-- tests/
+|   |   `-- adoption.router.test.js
+|   |-- package.json
+|   |-- package-lock.json
+|   `-- server.js
+|-- src/
+|   |-- components/
+|   |-- context/
+|   |-- data/
+|   |-- services/
+|   |-- App.jsx
+|   |-- main.jsx
+|   `-- index.css
+|-- package.json
+`-- package-lock.json
 ```
 
-3. Configurar Firebase:
-   - Crear un archivo `.env` en la raíz del proyecto
-   - Copiar el contenido de `.env.example` y completar con las credenciales de Firebase
-   - Las credenciales se obtienen desde Firebase Console
+Carpetas principales:
 
-4. Iniciar el servidor de desarrollo:
+- `backend/routes`: rutas de Express. Ahi esta `adoption.router.js`.
+- `backend/services`: logica aislada para adopciones. El router recibe el service por inyeccion para poder testear con fakes.
+- `backend/tests`: tests funcionales del router de adopciones.
+- `backend/server.js`: inicializa Express, Mongo, sesiones, auth y monta `/api/adoptions`.
+- `src`: frontend React del e-commerce.
+- `Dockerfile`: imagen de backend para ejecutar la API.
+
+## Endpoints de adopciones
+
+Base URL local:
+
+```bash
+http://localhost:8080/api/adoptions
+```
+
+Endpoints cubiertos:
+
+```txt
+GET  /api/adoptions
+GET  /api/adoptions/:aid
+POST /api/adoptions/:uid/:pid
+```
+
+## Tests funcionales
+
+Los tests estan en:
+
+```txt
+backend/tests/adoption.router.test.js
+```
+
+Se usa el test runner nativo de Node.js (`node:test`) y una app Express real levantada en un puerto temporal. Las dependencias externas se aislan usando un fake service inyectado en `createAdoptionRouter(service)`.
+
+Casos cubiertos:
+
+- `GET /api/adoptions`: exito y error 500 del service.
+- `GET /api/adoptions/:aid`: exito, id invalido, adopcion inexistente y error 500.
+- `POST /api/adoptions/:uid/:pid`: creacion exitosa, parametros invalidos, usuario inexistente, mascota inexistente, mascota ya adoptada y error 500.
+
+Ejecutar tests:
+
+```bash
+cd backend
+npm ci
+npm test
+```
+
+Evidencia de ejecucion:
+
+```txt
+# tests 12
+# suites 1
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+
+# routes/adoption.router.js
+# line %: 100.00
+# branch %: 100.00
+# funcs %: 100.00
+```
+
+## Dockerizacion
+
+El Dockerfile esta en la raiz del proyecto.
+
+Decisiones de optimizacion:
+
+- Imagen base `node:22-slim`, compatible con las dependencias actuales del backend.
+- Build en dos etapas para separar instalacion de dependencias y runtime.
+- `npm ci --omit=dev` para instalar solo dependencias de produccion.
+- `PUPPETEER_SKIP_DOWNLOAD=true` y `puppeteer` en `devDependencies`, para no incluir Chromium en la imagen final.
+- `.dockerignore` para excluir frontend, imagenes, PDF, `node_modules`, logs y archivos locales.
+- Usuario no root (`nodeapp`) para ejecutar la aplicacion.
+- `COPY --chown` en vez de `chown -R`, reduciendo capas lentas.
+- `HEALTHCHECK` contra `/health`.
+- Instalacion minima de `ca-certificates` y `libcurl4`, necesarias para que `mongodb-memory-server` pueda iniciar en Debian slim cuando no se pasa `MONGO_URI`.
+
+Construir la imagen:
+
+```bash
+docker build -t maxicalamante/e-commerce-pizzeria-napoles:1.0.0 -t maxicalamante/e-commerce-pizzeria-napoles:latest .
+```
+
+Ejecutar el contenedor:
+
+```bash
+docker run --rm --name pizzeria-napoles-api -p 8080:8080 maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+```
+
+Probar la API:
+
+```bash
+curl http://localhost:8080/health
+curl http://localhost:8080/api/adoptions
+curl -X POST http://localhost:8080/api/adoptions/user-1/pet-1 \
+  -H "Content-Type: application/json" \
+  -d "{\"notes\":\"Prueba desde Docker\"}"
+```
+
+## Imagen Docker
+
+Nombre y tag:
+
+```bash
+maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+maxicalamante/e-commerce-pizzeria-napoles:latest
+```
+
+Publicar en DockerHub:
+
+```bash
+docker login
+docker push maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+docker push maxicalamante/e-commerce-pizzeria-napoles:latest
+```
+
+URL publica esperada:
+
+```txt
+https://hub.docker.com/r/maxicalamante/e-commerce-pizzeria-napoles
+```
+
+Evidencia de build:
+
+```txt
+added 178 packages, and audited 179 packages
+found 0 vulnerabilities
+naming to docker.io/maxicalamante/e-commerce-pizzeria-napoles:1.0.0 done
+naming to docker.io/maxicalamante/e-commerce-pizzeria-napoles:latest done
+```
+
+Evidencia de ejecucion:
+
+```txt
+MongoDB Memory Server Started at mongodb://127.0.0.1:35737/
+MongoDB Conectado exitosamente
+Server listening on port 8080
+
+GET /health
+{"status":"ok"}
+
+GET /api/adoptions
+{"status":"success","payload":[]}
+
+POST /api/adoptions/user-1/pet-1
+{"status":"success","payload":{"id":"adoption-1782220499939","owner":{"id":"user-1","first_name":"Maximo","last_name":"Calamante","email":"maxi@example.com"},"pet":{"id":"pet-1","name":"Luna","specie":"dog","adopted":true},"notes":"Prueba desde Docker","adoptedAt":"2026-06-23T13:14:59.939Z"}}
+```
+
+## Escaneo basico de seguridad
+
+Comando ejecutado:
+
+```bash
+cd backend
+npm audit --omit=dev
+```
+
+Resultado:
+
+```txt
+found 0 vulnerabilities
+```
+
+Docker Scout se puede ejecutar despues de iniciar sesion en DockerHub:
+
+```bash
+docker login
+docker scout quickview maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+```
+
+## Scripts disponibles
+
+Backend:
+
+```bash
+cd backend
+npm start
+npm test
+```
+
+Frontend:
+
 ```bash
 npm run dev
+npm run build
+npm run preview
 ```
 
-La aplicación se ejecutará en `http://localhost:5173`
+## Variables de entorno
 
-## Estructura del Proyecto
+El backend puede usar un Mongo externo:
 
-```
-src/
-├── components/          # Componentes de React
-│   ├── NavBar.jsx
-│   ├── CartWidget.jsx
-│   ├── ItemListContainer.jsx
-│   ├── ItemList.jsx
-│   ├── ItemDetailContainer.jsx
-│   ├── ItemDetail.jsx
-│   ├── ItemCount.jsx
-│   ├── Cart.jsx
-│   ├── CartItem.jsx
-│   ├── CheckoutForm.jsx
-│   ├── OrderConfirmation.jsx
-│   ├── Loader.jsx
-│   ├── Contact.jsx
-│   └── NotFound.jsx
-├── context/            # Context API
-│   └── CartContext.jsx
-├── services/           # Servicios de Firebase
-│   ├── firebase.js
-│   └── firestore.js
-├── data/              # Datos locales
-│   └── products.js
-├── assets/            # Recursos (imágenes)
-├── App.jsx
-├── main.jsx
-└── index.css
+```env
+MONGO_URI=mongodb://localhost:27017/pizzeria-napoles
+PORT=8080
+SESSION_SECRET=super_secret_session
+JWT_SECRET=super_secret_jwt_key
 ```
 
-## Configuración de Firebase
-
-Para que el proyecto funcione correctamente es necesario configurar Firebase:
-
-1. Crear un proyecto en [Firebase Console](https://console.firebase.google.com/)
-2. Habilitar Firestore Database
-3. Obtener las credenciales de configuración
-4. Crear el archivo `.env` con las credenciales (ver `.env.example`)
-
-Para instrucciones detalladas, consultar el archivo `FIREBASE_GUIDE.md`.
-
-## Scripts Disponibles
-
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Crea el build de producción
-- `npm run preview` - Previsualiza el build de producción
-
-## Uso de la Aplicación
-
-1. Al ingresar se visualiza el catálogo completo de productos
-2. Se pueden filtrar los productos por categoría desde el menú
-3. Al hacer clic en "Ver Detalles" se accede a la información completa del producto
-4. Desde el detalle se puede seleccionar la cantidad y agregar al carrito
-5. El ícono del carrito en la barra de navegación muestra la cantidad de productos
-6. En la vista del carrito se pueden modificar las cantidades o eliminar productos
-7. Al presionar "Finalizar Compra" se accede al formulario de datos personales
-8. Una vez completado el formulario, se genera una orden que se guarda en Firestore
-9. Se muestra una confirmación con el ID de la orden generada
-
-## Consideraciones
-
-- El stock de los productos se valida al momento de agregar al carrito
-- El carrito se persiste en localStorage para mantener los datos entre sesiones
-- Las credenciales de Firebase no deben subirse al repositorio (usar `.env`)
-- El archivo `.env` debe compartirse por separado con el profesor
+Si no se define `MONGO_URI`, el backend levanta `mongodb-memory-server` para poder ejecutarse localmente y en Docker sin instalar MongoDB aparte.
 
 ## Autor
 
 Maximo Calamante
-
-## Entrega del Proyecto
-
-Este proyecto fue desarrollado como trabajo final para el curso de React.
-

@@ -9,6 +9,7 @@ const connectDB = require('./config/db');
 
 const authRoutes = require('./routes/auth.routes');
 const sessionRoutes = require('./routes/session.routes');
+const createAdoptionRouter = require('./routes/adoption.router');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -17,6 +18,9 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 // Initialize DB and then start server
 connectDB().then((mongoUrl) => {
@@ -46,6 +50,7 @@ connectDB().then((mongoUrl) => {
     app.use('/api/v1/auth', authRoutes);
     app.use('/api/v1', sessionRoutes); // Para /api/v1/session
     app.use('/api/sessions', sessionRoutes); // Para /api/sessions/current
+    app.use('/api/adoptions', createAdoptionRouter());
 
     app.listen(PORT, () => {
         console.log(`Server listening on port ${PORT}`);
