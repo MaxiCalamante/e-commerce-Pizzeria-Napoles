@@ -2,12 +2,12 @@
 
 Repositorio del proyecto: https://github.com/MaxiCalamante/e-commerce-Pizzeria-Napoles
 
-Imagen DockerHub: https://hub.docker.com/r/maxicalamante/e-commerce-pizzeria-napoles
+Imagen DockerHub: https://hub.docker.com/r/calamaxi/e-commerce-pizzeria-napoles
 
 Tag usado para la entrega:
 
 ```bash
-maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+calamaxi/e-commerce-pizzeria-napoles:1.0.0
 ```
 
 ## Descripcion
@@ -142,13 +142,13 @@ Decisiones de optimizacion:
 Construir la imagen:
 
 ```bash
-docker build -t maxicalamante/e-commerce-pizzeria-napoles:1.0.0 -t maxicalamante/e-commerce-pizzeria-napoles:latest .
+docker build -t calamaxi/e-commerce-pizzeria-napoles:1.0.0 -t calamaxi/e-commerce-pizzeria-napoles:latest .
 ```
 
 Ejecutar el contenedor:
 
 ```bash
-docker run --rm --name pizzeria-napoles-api -p 8080:8080 maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+docker run --rm --name pizzeria-napoles-api -p 8080:8080 calamaxi/e-commerce-pizzeria-napoles:1.0.0
 ```
 
 Probar la API:
@@ -166,22 +166,22 @@ curl -X POST http://localhost:8080/api/adoptions/user-1/pet-1 \
 Nombre y tag:
 
 ```bash
-maxicalamante/e-commerce-pizzeria-napoles:1.0.0
-maxicalamante/e-commerce-pizzeria-napoles:latest
+calamaxi/e-commerce-pizzeria-napoles:1.0.0
+calamaxi/e-commerce-pizzeria-napoles:latest
 ```
 
 Publicar en DockerHub:
 
 ```bash
 docker login
-docker push maxicalamante/e-commerce-pizzeria-napoles:1.0.0
-docker push maxicalamante/e-commerce-pizzeria-napoles:latest
+docker push calamaxi/e-commerce-pizzeria-napoles:1.0.0
+docker push calamaxi/e-commerce-pizzeria-napoles:latest
 ```
 
 URL publica esperada:
 
 ```txt
-https://hub.docker.com/r/maxicalamante/e-commerce-pizzeria-napoles
+https://hub.docker.com/r/calamaxi/e-commerce-pizzeria-napoles
 ```
 
 Evidencia de build:
@@ -189,8 +189,8 @@ Evidencia de build:
 ```txt
 added 178 packages, and audited 179 packages
 found 0 vulnerabilities
-naming to docker.io/maxicalamante/e-commerce-pizzeria-napoles:1.0.0 done
-naming to docker.io/maxicalamante/e-commerce-pizzeria-napoles:latest done
+naming to docker.io/calamaxi/e-commerce-pizzeria-napoles:1.0.0 done
+naming to docker.io/calamaxi/e-commerce-pizzeria-napoles:latest done
 ```
 
 Evidencia de ejecucion:
@@ -229,7 +229,7 @@ Docker Scout se puede ejecutar despues de iniciar sesion en DockerHub:
 
 ```bash
 docker login
-docker scout quickview maxicalamante/e-commerce-pizzeria-napoles:1.0.0
+docker scout quickview calamaxi/e-commerce-pizzeria-napoles:1.0.0
 ```
 
 ## Scripts disponibles
@@ -266,3 +266,4 @@ Si no se define `MONGO_URI`, el backend levanta `mongodb-memory-server` para pod
 ## Autor
 
 Maximo Calamante
+
